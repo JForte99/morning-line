@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Joe · New Tab</title>
+<style>
+:root{
+  --bg:#f4f5f7; --card:#fff; --line:#e6e8ec; --ink:#1c1e21; --mute:#6b7280; --dim:#9aa1ab;
+  --up:#128a3e; --down:#d1242f; --accent:#111827;
+  --sans: -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
+  --mono: ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+body{min-height:100vh}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1320px;margin:0 auto;padding:22px 28px 48px}
+header.mast{display:flex;align-items:flex-end;justify-content:space-between;padding-bottom:14px}
+.mast .meta{text-align:right;color:var(--mute);font-size:12px;line-height:1.6}
+.mast .clock{font-size:20px;color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+
+.strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.tick{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px 12px;min-height:108px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.tick .lab{font-size:13px;color:var(--mute);display:flex;justify-content:space-between;font-weight:500}
+.tick .lab span:last-child{color:var(--dim);font-size:11px;font-family:var(--mono)}
+.tick .px{font-size:28px;font-weight:650;margin:8px 0 2px;font-variant-numeric:tabular-nums;letter-spacing:-.4px}
+.tick .chg{font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
+.tick .sub{font-size:11px;color:var(--dim);margin-top:8px}
+.up{color:var(--up)} .down{color:var(--down)} .flat{color:var(--mute)}
+.stripnote{display:flex;justify-content:space-between;color:var(--dim);font-size:11px;padding:10px 2px 0}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;background:#eef0f3;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-weight:600}
+.pill.open{background:#e7f6ec;color:var(--up)}
+.pill.closed{background:#fdecec;color:var(--down)}
+.tvwrap{display:none;grid-template-columns:repeat(4,1fr);gap:12px}
+
+.cols{display:grid;grid-template-columns:1fr 1.05fr;gap:16px;margin-top:16px}
+.sec{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px 8px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.kicker{font-size:13px;font-weight:650;color:var(--ink);letter-spacing:0;text-transform:none;margin-bottom:4px}
+.secmeta{color:var(--dim);font-size:12px;margin:0 0 8px}
+.record{color:var(--mute);font-weight:500;font-size:13px}
+
+.feed{list-style:none;margin:0;padding:0}
+.feed li{border-top:1px solid var(--line);padding:12px 0}
+.feed .who{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:var(--mute)}
+.feed .who b{color:var(--ink);font-weight:650}
+.feed .txt{margin:4px 0 0;font-size:14px;line-height:1.45}
+.feed a:hover{text-decoration:underline}
+
+.eagles h3{font-size:12px;color:var(--mute);margin:18px 0 6px;font-weight:650}
+.next{border:1px solid var(--line);border-radius:10px;background:#fafbfc;padding:14px 16px;margin-top:8px}
+.next .kicker{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-weight:650}
+.next .vs{font-size:20px;font-weight:650;letter-spacing:-.2px}
+.next .when{color:var(--mute);font-size:13px;margin-top:4px}
+.next .line{margin-top:8px;font-size:13px}
+.games{width:100%;border-collapse:collapse;font-size:13px}
+.games td{padding:9px 4px;border-top:1px solid var(--line);vertical-align:top}
+.games td.d{color:var(--mute);white-space:nowrap;font-size:12px}
+.games td.o{font-size:12px;text-align:right;white-space:nowrap;color:var(--mute)}
+.na{color:var(--dim);font-style:italic}
+.news{list-style:none;margin:0;padding:0}
+.news li{padding:10px 0;border-top:1px solid var(--line)}
+.news li a{font-size:14.5px;line-height:1.35;font-weight:550}
+.news li a:hover{text-decoration:underline}
+.news .t{color:var(--dim);font-size:11px;margin-top:3px}
+.err{color:var(--down);font-size:13px}
+footer{margin-top:18px;color:var(--dim);font-size:11px;padding:4px 2px 0}
+@media (max-width:900px){.strip,.tvwrap{grid-template-columns:repeat(2,1fr)}.cols{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <div>
+      <div class="kicker">The Morning Line · for Joe</div>
+    </div>
+    <div class="meta">
+      <div class="clock" id="clock">—</div>
+      <div id="dateline">—</div>
+    </div>
+  </header>
+
+  <!-- FUTURES -->
+  <section class="strip" id="strip">
+    <div class="tick" data-k="ES"><div class="lab"><span>S&amp;P 500</span><span>ES</span></div><div class="px">—</div><div class="chg flat">loading…</div><div class="sub"></div></div>
+    <div class="tick" data-k="NQ"><div class="lab"><span>Nasdaq</span><span>NQ</span></div><div class="px">—</div><div class="chg flat">loading…</div><div class="sub"></div></div>
+    <div class="tick" data-k="CL"><div class="lab"><span>Crude oil</span><span>CL · WTI</span></div><div class="px">—</div><div class="chg flat">loading…</div><div class="sub"></div></div>
+    <div class="tick" data-k="ZN"><div class="lab"><span>10-year</span><span>yield</span></div><div class="px">—</div><div class="chg flat">loading…</div><div class="sub"></div></div>
+  </section>
+  <div class="tvwrap" id="tvwrap"></div>
+  <div class="stripnote">
+    <span><span class="pill" id="session">Session —</span>&nbsp; <span id="sessionNote"></span></span>
+    <span id="quoteAsOf">Quotes as of —</span>
+  </div>
+
+  <div class="cols">
+    <!-- LEFT: X -->
+    <section class="sec">
+      <div class="kicker">X</div>
+      <div id="xfeed">
+        <div class="secmeta" id="xAsOf">Posts from the last 24 hours, ranked by likes. Pulled 6:12 PM ET. This page can't refresh X on its own.</div>
+        <ul class="feed" id="xlist"></ul>
+        <p class="na" id="xquiet" style="margin-top:12px"></p>
+      </div>
+    </section>
+
+    <!-- RIGHT: Eagles -->
+    <section class="sec eagles">
+      <div class="kicker">Philadelphia Eagles <span class="record" id="record"></span></div>
+      <div class="secmeta" id="eaglesAsOf">Loading from ESPN…</div>
+
+      <div id="nextGame" class="next"><div class="na">Loading schedule…</div></div>
+
+      <h3>Upcoming</h3>
+      <table class="games"><tbody id="games"><tr><td class="na">Loading…</td></tr></tbody></table>
+
+      <h3>Latest news</h3>
+      <ul class="news" id="news"><li class="na">Loading…</li></ul>
+    </section>
+  </div>
+
+  
+
+<footer>
+    Futures: TradingView quote data (CME, ~10 min delayed), CNBC as backup, TradingView widgets as last resort; The 10-year tile is the cash Treasury yield from CNBC, not the futures price. Eagles schedule, news and lines: ESPN public API (lines via ESPN, provider shown). Quotes refresh every 60s; Eagles every 10 min. X posts are a snapshot from 6:12 PM ET for @benjitaylor, @chamath, @tickerplus, @GavinSBaker. All times America/New_York.
+  </footer>
+</div>
+
+<script>
+const TZ = 'America/New_York';
+const fmtTime = d => d.toLocaleTimeString('en-US',{timeZone:TZ,hour:'numeric',minute:'2-digit'});
+const fmtStamp = d => d.toLocaleString('en-US',{timeZone:TZ,weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}) + ' ET';
+const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function tickClock(){
+  const n=new Date();
+  document.getElementById('clock').textContent = fmtTime(n)+' ET';
+  document.getElementById('dateline').textContent = n.toLocaleDateString('en-US',{timeZone:TZ,weekday:'long',month:'long',day:'numeric',year:'numeric'});
+}
+tickClock(); setInterval(tickClock, 15000);
+
+/* ---------- CME Globex session state (ET) ---------- */
+function etParts(d=new Date()){
+  const p=new Intl.DateTimeFormat('en-US',{timeZone:TZ,weekday:'short',hour:'numeric',minute:'numeric',hour12:false}).formatToParts(d);
+  const g=t=>p.find(x=>x.type===t).value;
+  return {wd:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(g('weekday')), h:(+g('hour'))%24, m:+g('minute')};
+}
+function cmeSession(){
+  const {wd,h,m}=etParts(); const t=h*60+m;
+  if (wd===6) return {open:false,txt:'Closed for the weekend · reopens Sun 6:00 PM ET'};
+  if (wd===0) return t>=1080 ? {open:true,txt:'Overnight session (Globex)'} : {open:false,txt:'Closed for the weekend · reopens 6:00 PM ET'};
+  if (wd===5 && t>=1020) return {open:false,txt:'Closed for the weekend · reopens Sun 6:00 PM ET'};
+  if (t>=1020 && t<1080) return {open:false,txt:'Daily break 5–6 PM ET · showing last/settle'};
+  if (t>=570 && t<1020) return {open:true,txt:'Regular hours'};
+  return {open:true,txt:'Overnight session (Globex)'};
+}
+
+/* ---------- Futures ----------
+   Primary: TradingView scanner (CORS ok from file:// and any origin; CME data ~10 min delayed).
+   Fallback: CNBC quote service (CORS: *). Last resort: TradingView iframe widgets.
+   10-year yield (cash Treasury) always from CNBC, shown under the ZN tile. */
+const TV_SCAN='https://scanner.tradingview.com/futures/scan';
+const TV_SYMS={'CME_MINI:ES1!':'ES','CME_MINI:NQ1!':'NQ','NYMEX:CL1!':'CL','CBOT:ZN1!':'ZN'};
+const CNBC = 'https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=' +
+  encodeURIComponent('@SP.1|@ND.1|@CL.1|@TY.1|US10Y') + '&requestMethod=itv&noform=1&partnerId=2&fund=1&exthrs=1&output=json&events=1';
+const CNBC_MAP = {'@SP.1':'ES','@ND.1':'NQ','@CL.1':'CL','@TY.1':'ZN'};
+const DEC={ES:2,NQ:2,CL:2,ZN:4};
+const num = s => { if(s==null) return NaN; s=String(s).replace(/[,%+]/g,''); return s==='UNCH'?0:parseFloat(s); };
+let tvMode=false, yieldTxt='';
+
+function paint(k,last,ch,pct,sub){
+  const el=document.querySelector(`.tick[data-k="${k}"]`);
+  const cls = ch>0?'up':ch<0?'down':'flat', arrow = ch>0?'▲':ch<0?'▼':'■';
+  const f=(v,d)=>v.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+  el.querySelector('.px').textContent = f(last,DEC[k]);
+  const c=el.querySelector('.chg'); c.className='chg '+cls;
+  c.textContent = `${arrow} ${ch>0?'+':''}${f(ch,DEC[k])}  ${pct>0?'+':''}${pct.toFixed(2)}%`;
+  if(k==='ZN') return;
+  el.querySelector('.sub').textContent = sub;
+}
+
+function paintYield(y){
+  if(!y||!y.last) return;
+  const last=num(y.last), ch=num(y.change);
+  if(!isFinite(last)) return;
+  const el=document.querySelector('.tick[data-k="ZN"]');
+  const cls = ch>0?'up':ch<0?'down':'flat', arrow = ch>0?'▲':ch<0?'▼':'■';
+  el.querySelector('.px').textContent = last.toFixed(3)+'%';
+  const c=el.querySelector('.chg'); c.className='chg '+cls;
+  c.textContent = `${arrow} ${ch>0?'+':''}${isFinite(ch)?ch.toFixed(3):'0.000'}`;
+  el.querySelector('.sub').textContent = '10-year Treasury yield';
+}
+
+async function loadYield(){
+  try{
+    const j=await (await fetch(CNBC,{cache:'no-store'})).json();
+    const list=j?.FormattedQuoteResult?.FormattedQuote||[];
+    const y=list.find(q=>q.symbol==='US10Y');
+    if(y&&y.last) yieldTxt=`yield ${y.last} (${y.change})`;
+    return list;
+  }catch(e){ return []; }
+}
+
+async function fromTradingView(){
+  const body=JSON.stringify({symbols:{tickers:Object.keys(TV_SYMS)},columns:['close','change','change_abs','description','update_mode']});
+  const r=await fetch(TV_SCAN,{method:'POST',body,headers:{'Content-Type':'text/plain'},cache:'no-store'});
+  if(!r.ok) throw new Error('TV HTTP '+r.status);
+  const j=await r.json(); let n=0, mode='';
+  for(const row of j.data||[]){
+    const k=TV_SYMS[row.s]; const [close,pct,abs,desc,um]=row.d; if(!k||close==null) continue;
+    mode=um||mode;
+    paint(k,close,abs??0,pct??0,`${desc} · ${row.s.split(':')[1]}`); n++;
+  }
+  if(!n) throw new Error('TV empty');
+  const m=/delayed_streaming_(\d+)/.exec(mode);
+  return 'TradingView'+(m?` (${Math.round(m[1]/60)} min delayed)`:mode==='streaming'?' (real-time)':'');
+}
+
+function fromCNBC(list){
+  let n=0;
+  for(const q of list){ const k=CNBC_MAP[q.symbol]; if(!k||!q.last||q.code!==0) continue;
+    const t=q.last_time?new Date(q.last_time.replace(/([+-]\d\d)(\d\d)$/,'$1:$2')):null;
+    paint(k,num(q.last),num(q.change),num(q.change_pct),(q.name||'')+(t&&!isNaN(t)?' · '+fmtTime(t)+' ET':'')); n++; }
+  if(!n) throw new Error('CNBC empty');
+  return 'CNBC (may be delayed)';
+}
+
+async function loadFutures(){
+  const list=await loadYield();
+  let src='';
+  try{ src=await fromTradingView(); }
+  catch(e){ console.warn(e); try{ src=fromCNBC(list); }catch(e2){ console.warn(e2); useTradingView(); } }
+  const yld=(list||[]).find(q=>q.symbol==='US10Y');
+  paintYield(yld);
+  if(src) document.getElementById('quoteAsOf').textContent='Quotes as of '+fmtStamp(new Date())+' · '+src;
+  const s=cmeSession(), p=document.getElementById('session');
+  p.textContent = s.open?'Futures open':'Futures closed'; p.className='pill '+(s.open?'open':'closed');
+  document.getElementById('sessionNote').textContent = s.txt;
+}
+
+function useTradingView(){
+  if(tvMode) return; tvMode=true;
+  document.getElementById('strip').style.display='none';
+  const w=document.getElementById('tvwrap'); w.style.display='grid';
+  [['CME_MINI:ES1!','S&P 500'],['CME_MINI:NQ1!','Nasdaq'],['NYMEX:CL1!','Crude oil'],['TVC:US10Y','10-year yield']].forEach(([sym,label])=>{
+    const box=document.createElement('div'); box.className='tradingview-widget-container';
+    box.innerHTML='<div class="tradingview-widget-container__widget"></div>';
+    const s=document.createElement('script'); s.src='https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js'; s.async=true;
+    s.text=JSON.stringify({symbol:sym,width:'100%',colorTheme:'dark',isTransparent:true,locale:'en'});
+    box.appendChild(s); w.appendChild(box);
+  });
+  document.getElementById('quoteAsOf').textContent='CNBC unreachable · live TradingView widgets (self-updating)';
+}
+
+/* ---------- Eagles: ESPN ---------- */
+const ESPN_SCHED='https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/phi/schedule';
+const ESPN_NEWS='https://site.api.espn.com/apis/site/v2/sports/football/nfl/news?team=phi&limit=12';
+const oddsURL=id=>`https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/${id}/competitions/${id}/odds`;
+
+async function getLine(id){
+  try{
+    const r=await fetch(oddsURL(id),{cache:'no-store'}); if(!r.ok) return null;
+    const j=await r.json(); const it=(j.items||[]).sort((a,b)=>(a.provider?.priority??9)-(b.provider?.priority??9))[0];
+    if(!it || !it.details) return null;
+    return {details:it.details, ou:it.overUnder, prov:it.provider?.name||''};
+  }catch(e){return null}
+}
+
+function gameInfo(e){
+  const c=e.competitions[0]; const phi=c.competitors.find(x=>x.team.abbreviation==='PHI'); const opp=c.competitors.find(x=>x!==phi);
+  const neutral=c.neutralSite; const home=phi.homeAway==='home';
+  const tag = neutral ? 'vs' : home ? 'vs' : '@';
+  return {c,phi,opp,tag,neutral,venue:c.venue?.fullName||'',tv:(c.broadcasts||[]).map(b=>b.media?.shortName).filter(Boolean).join(', '),
+    status:c.status?.type, date:new Date(e.date), tbd:e.timeValid===false};
+}
+const gdate = (g)=> g.date.toLocaleString('en-US',{timeZone:TZ,weekday:'short',month:'short',day:'numeric'}) + (g.tbd?' · TBD':' · '+fmtTime(g.date)+' ET');
+function eaglesView(d){ const m=/^([A-Z]{2,4})\s+([+-]?\d+(?:\.\d+)?)$/.exec(String(d||'').trim()); if(!m) return '';
+  const v=parseFloat(m[2]); if(m[1]==='PHI') return v<0?'Eagles favored':''; return v<0?`Eagles +${-v}`:''; }
+const lineTxt = l => { if(!l) return '<span class="na">line not posted</span>'; const ev=eaglesView(l.details);
+  return `${esc(l.details)}${ev?' <span class="na">('+ev+')</span>':''}${l.ou!=null?' · O/U '+l.ou:''}`; };
+
+async function loadEagles(){
+  // schedule
+  try{
+    const r=await fetch(ESPN_SCHED,{cache:'no-store'}); if(!r.ok) throw new Error('HTTP '+r.status);
+    const j=await r.json();
+    document.getElementById('record').textContent = j.team?.recordSummary ? `(${j.team.recordSummary})` : '';
+    const ev=(j.events||[]).map(e=>({e,g:gameInfo(e)}));
+    const upcoming=ev.filter(x=>!x.g.status?.completed);
+    const last=ev.filter(x=>x.g.status?.completed).pop();
+    const lines=await Promise.all(upcoming.slice(0,8).map(x=>getLine(x.e.id)));
+    if(upcoming.length){
+      const n=upcoming[0].g, l=lines[0];
+      const live = n.status?.state==='in';
+      document.getElementById('nextGame').innerHTML=`
+        <div class="kicker">${live?'Live now · '+esc(n.status.shortDetail||''):'Next game'}</div>
+        <div class="vs">Eagles ${n.tag} ${esc(n.opp.team.displayName)}</div>
+        <div class="when">${gdate(n)}${n.tv?' · '+esc(n.tv):''}${n.venue?' · '+esc(n.venue):''}${n.neutral?' (neutral site)':''}</div>
+        <div class="line">Line: ${lineTxt(l)}${l&&l.prov?` <span class="na">(${esc(l.prov)} via ESPN)</span>`:''}</div>
+        ${last?`<div class="when" style="margin-top:8px">Last: ${lastTxt(last.g)}</div>`:''}`;
+    } else document.getElementById('nextGame').innerHTML='<div class="na">No upcoming games on the ESPN schedule.</div>';
+    document.getElementById('games').innerHTML = upcoming.slice(1,8).map((x,i)=>`
+      <tr><td class="d">${gdate(x.g)}</td><td>${x.g.tag} ${esc(x.g.opp.team.displayName)}${x.g.tv?` <span class="na">${esc(x.g.tv)}</span>`:''}</td>
+      <td class="o">${lineTxt(lines[i+1])}</td></tr>`).join('') || '<tr><td class="na">Nothing further scheduled.</td></tr>';
+  }catch(e){
+    document.getElementById('nextGame').innerHTML=`<div class="err">Couldn't load the ESPN schedule (${esc(e.message)}).</div>`;
+  }
+  // news
+  try{
+    const r=await fetch(ESPN_NEWS,{cache:'no-store'}); if(!r.ok) throw new Error('HTTP '+r.status);
+    const j=await r.json();
+    const arts=(j.articles||[]).sort((a,b)=>new Date(b.published)-new Date(a.published)).slice(0,10);
+    document.getElementById('news').innerHTML = arts.map(a=>`<li><a href="${esc(a.links?.web?.href||'#')}" target="_blank" rel="noopener">${esc(a.headline)}</a>
+      <div class="t">${esc(a.type==='Media'?'Video':a.type==='HeadlineNews'?'Headline':a.type||'')} · ${fmtStamp(new Date(a.published))}</div></li>`).join('') || '<li class="na">No headlines returned.</li>';
+  }catch(e){
+    document.getElementById('news').innerHTML=`<li class="err">Couldn't load ESPN news (${esc(e.message)}).</li>`;
+  }
+  document.getElementById('eaglesAsOf').textContent='ESPN · as of '+fmtStamp(new Date());
+}
+function lastTxt(g){
+  const ps=g.phi.score?.displayValue ?? g.phi.score, os=g.opp.score?.displayValue ?? g.opp.score;
+  const w = g.phi.winner ? 'W' : (g.opp.winner ? 'L' : '');
+  return `${w} ${esc(ps)}–${esc(os)} ${g.tag} ${esc(g.opp.team.abbreviation)}`;
+}
+
+loadFutures(); setInterval(()=>{ if(!tvMode) loadFutures(); else { const s=cmeSession(); document.getElementById('sessionNote').textContent=s.txt; } }, 60000);
+loadEagles(); setInterval(loadEagles, 10*60000);
+const XPOSTS = [
+  {name:"Chamath Palihapitiya",user:"chamath",time:"5:21 PM ET",likes:2000,text:"This is a very big deal.",url:"https://x.com/chamath/status/2108306763913290003"},
+  {name:"Chamath Palihapitiya",user:"chamath",time:"7:29 PM ET",likes:1645,text:"Wow",url:"https://x.com/chamath/status/2107976562293514674"},
+  {name:"Benji Taylor",user:"benjitaylor",time:"7:17 PM ET",likes:1287,text:"Shipped a small X quality of life improvement when reposting videos on the web. Just like on mobile, it's now easy to show the full post or just the video with attribution. Click the expand/collapse icon to toggle between the two.",url:"https://x.com/benjitaylor/status/2107973656098033792"},
+  {name:"Chamath Palihapitiya",user:"chamath",time:"10:34 AM ET",likes:753,text:"Solar and batteries are not only becoming the biggest energy sources, they are also becoming hugely lucrative markets. We will see a consolidation in solar and batteries that will be similar to how Nat Gas consolidated in the late 2010s. Many new big energy companies will be",url:"https://x.com/chamath/status/2108204441497456830"},
+  {name:"TickerTrends",user:"tickerplus",time:"1:25 PM ET",likes:214,text:"On September 29, OpenAI was reported to be nearing $70B in annualized revenue. Our tracking showed $50.44B at the time, well below that figure. Today, the Financial Times reports OpenAI told investors it was approaching $50B in September.",url:"https://x.com/tickerplus/status/2108247488780001724"},
+  {name:"Chamath Palihapitiya",user:"chamath",time:"5:56 PM ET",likes:168,text:"@elonmusk Agree. This is the beginning of the beginning of the end for established incumbents…",url:"https://x.com/chamath/status/2108315545267483129"},
+  {name:"Benji Taylor",user:"benjitaylor",time:"12:27 AM ET",likes:161,text:"@iruletheworldmo the team is working day and night to make the best/most seamless product possible :)",url:"https://x.com/benjitaylor/status/2108051633817219498"},
+  {name:"Gavin Baker",user:"GavinSBaker",time:"7:26 AM ET",likes:143,text:"Should be fun",url:"https://x.com/GavinSBaker/status/2108157031102443550"},
+  {name:"TickerTrends",user:"tickerplus",time:"12:47 PM ET",likes:41,text:"TickerTrends OpenAI ARR Tracking reported $50.44B at the end of September",url:"https://x.com/tickerplus/status/2108237824583704620"}
+];
+function renderX(){
+  const ul=document.getElementById('xlist');
+  ul.innerHTML = XPOSTS.map(p=>`<li><div class="who"><b>${esc(p.name)}</b><span>@${esc(p.user)} · ${esc(p.time)} · ${p.likes.toLocaleString()} likes</span></div><div class="txt"><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.text)}</a></div></li>`).join('');
+  document.getElementById('xquiet').textContent = 'Quiet in the last 24 hours: @karpathy posted nothing. @kevinrose only left a two-character reply. @bot only posted automated replies, so those are left out.';
+}
+renderX();
+</script>
+</body>
+</html>
