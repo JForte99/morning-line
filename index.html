@@ -101,7 +101,7 @@ footer{margin-top:18px;color:var(--dim);font-size:11px;padding:4px 2px 0}
     <section class="sec">
       <div class="kicker">X</div>
       <div id="xfeed">
-        <div class="secmeta" id="xAsOf">Posts from the last 24 hours, ranked by likes. Pulled 6:12 PM ET. This page can't refresh X on its own.</div>
+        <div class="secmeta" id="xAsOf">Posts from the last 24 hours, ranked by likes. Pulled 7:42 AM ET. This page can't refresh X on its own.</div>
         <ul class="feed" id="xlist"></ul>
         <p class="na" id="xquiet" style="margin-top:12px"></p>
       </div>
@@ -125,7 +125,7 @@ footer{margin-top:18px;color:var(--dim);font-size:11px;padding:4px 2px 0}
   
 
 <footer>
-    Futures: TradingView quote data (CME, ~10 min delayed), CNBC as backup, TradingView widgets as last resort; The 10-year tile is the cash Treasury yield from CNBC, not the futures price. Eagles schedule, news and lines: ESPN public API (lines via ESPN, provider shown). Quotes refresh every 60s; Eagles every 10 min. X posts are a snapshot from Mon Oct 12, 2:20 PM ET (last 24 hours) for @benjitaylor, @bot, @tickerplus, @chamath, @kevinrose, @karpathy, @GavinSBaker. All times America/New_York.
+    Futures: TradingView quote data (CME, ~10 min delayed), CNBC as backup, TradingView widgets as last resort; The 10-year tile is the cash Treasury yield from CNBC, not the futures price. Eagles schedule, news and lines: ESPN public API (lines via ESPN, provider shown). Quotes refresh every 60s; Eagles every 10 min. X posts are a snapshot from Tue Oct 13, 7:42 AM ET (last 24 hours) for @benjitaylor, @bot, @tickerplus, @chamath, @kevinrose, @karpathy, @GavinSBaker. All times America/New_York.
   </footer>
 </div>
 
@@ -329,20 +329,20 @@ function lastTxt(g){
 loadFutures(); setInterval(()=>{ if(!tvMode) loadFutures(); else { const s=cmeSession(); document.getElementById('sessionNote').textContent=s.txt; } }, 60000);
 loadEagles(); setInterval(loadEagles, 10*60000);
 const XPOSTS = [
-  {"name": "Andrej Karpathy", "user": "karpathy", "time": "Sun 3:12 PM ET", "likes": 37632, "text": "Dusting off this tweet from April because this gap in shared understanding of LLM capability is *widening*. It's now less \"two groups of people speaking past each other\" and more a sharp funnel. - Napkin math somewhere around 6B people (~75% of the population) have barely come", "url": "https://x.com/karpathy/status/2109361546505966046"},
-  {"name": "Chamath Palihapitiya", "user": "chamath", "time": "Mon 10:54 AM ET", "likes": 1209, "text": "You should expect the silicon chip companies to move up the stack as the application companies move down the stack. In AI, it is increasingly true that everyone competes with everyone. Everyone will soon offer their own LPS, silicon, cloud and applications. The question is", "url": "https://x.com/chamath/status/2109658962807386330"},
-  {"name": "Chamath Palihapitiya", "user": "chamath", "time": "Sun 3:25 PM ET", "likes": 370, "text": "👀", "url": "https://x.com/chamath/status/2109364670691995891"},
-  {"name": "Gavin Baker", "user": "GavinSBaker", "time": "Sun 5:09 PM ET", "likes": 187, "text": "@quantian1 Yes. It is well understood that collapsing marginal prices have never worked out well for technology companies over the last 50 years. Oh wait. During that time they became a majority of market cap while marginal prices collapsed. I’m sure that you are about to be…", "url": "https://x.com/GavinSBaker/status/2109390870348730872"},
-  {"name": "Gavin Baker", "user": "GavinSBaker", "time": "Mon 9:36 AM ET", "likes": 173, "text": "@gnoble79 Hi George. I hope you are well and wish you the best of luck.", "url": "https://x.com/GavinSBaker/status/2109639225536647631"},
-  {"name": "Chamath Palihapitiya", "user": "chamath", "time": "Mon 1:52 PM ET", "likes": 159, "text": "Model Benchmarks Are Worthless How can a model score 24% and 59% on the same 113 coding tasks? It happens when you vary the harness that wraps it. I’ve increasingly ignored most of the recent model leaderboard results. Partly from exhaustion and partly because improvements", "url": "https://x.com/chamath/status/2109703737493344363"},
-  {"name": "Gavin Baker", "user": "GavinSBaker", "time": "Mon 11:44 AM ET", "likes": 112, "text": "@joinyellowbrick My main takeaway is that AI skeptics are anchored on the ~$1 trillion in unfunded MOUs being a massive risk and it is therefore upsetting to hear that no one in the supply chain takes them seriously. There are so many good, realistic bear cases. Such a…", "url": "https://x.com/GavinSBaker/status/2109671679106687412"},
-  {"name": "Chamath Palihapitiya", "user": "chamath", "time": "Mon 12:37 PM ET", "likes": 97, "text": "@elonmusk I really agree with this.", "url": "https://x.com/chamath/status/2109684878015152281"},
-  {"name": "Gavin Baker", "user": "GavinSBaker", "time": "Mon 10:30 AM ET", "likes": 59, "text": "@joinyellowbrick I genuinely had no idea this would be as controversial as it has proven to be.", "url": "https://x.com/GavinSBaker/status/2109652995591860708"}
+  {"name": "Chamath Palihapitiya", "user": "chamath", "time": "Mon 10:54 AM ET", "likes": 2196, "text": "You should expect the silicon chip companies to move up the stack as the application companies move down the stack. In AI, it is increasingly true that everyone competes with everyone. Everyone will soon offer their own LPS, silicon, cloud and applications. The question is", "url": "https://x.com/chamath/status/2109658962807386330"},
+  {"name": "Benji Taylor", "user": "benjitaylor", "time": "Mon 4:17 PM ET", "likes": 1352, "text": "I think we might need a pumpkin shaped Grok Bot for Halloween", "url": "https://x.com/benjitaylor/status/2109740199060357553"},
+  {"name": "Benji Taylor", "user": "benjitaylor", "time": "Mon 7:29 PM ET", "likes": 1194, "text": "The X Subscription brings together plans across Grok, Cursor, and X Premium into one unified subscription. Excited for this to finally roll out!", "url": "https://x.com/benjitaylor/status/2109788642982178881"},
+  {"name": "Chamath Palihapitiya", "user": "chamath", "time": "Mon 1:52 PM ET", "likes": 953, "text": "Model Benchmarks Are Worthless How can a model score 24% and 59% on the same 113 coding tasks? It happens when you vary the harness that wraps it. I’ve increasingly ignored most of the recent model leaderboard results. Partly from exhaustion and partly because improvements", "url": "https://x.com/chamath/status/2109703737493344363"},
+  {"name": "Chamath Palihapitiya", "user": "chamath", "time": "Mon 12:37 PM ET", "likes": 197, "text": "@elonmusk I really agree with this.", "url": "https://x.com/chamath/status/2109684878015152281"},
+  {"name": "Gavin Baker", "user": "GavinSBaker", "time": "Mon 9:36 AM ET", "likes": 195, "text": "@gnoble79 Hi George. I hope you are well and wish you the best of luck.", "url": "https://x.com/GavinSBaker/status/2109639225536647631"},
+  {"name": "Gavin Baker", "user": "GavinSBaker", "time": "Mon 11:44 AM ET", "likes": 158, "text": "@joinyellowbrick My main takeaway is that AI skeptics are anchored on the ~$1 trillion in unfunded MOUs being a massive risk and it is therefore upsetting to hear that no one in the supply chain takes them seriously. There are so many good, realistic bear cases. Such a…", "url": "https://x.com/GavinSBaker/status/2109671679106687412"},
+  {"name": "Gavin Baker", "user": "GavinSBaker", "time": "Mon 10:30 AM ET", "likes": 81, "text": "@joinyellowbrick I genuinely had no idea this would be as controversial as it has proven to be.", "url": "https://x.com/GavinSBaker/status/2109652995591860708"},
+  {"name": "Gavin Baker", "user": "GavinSBaker", "time": "Tue 7:36 AM ET", "likes": 56, "text": "Quite a mistake from @business yesterday: “Tan said bluntly that the market misread OpenAI’s revenue figures because the company’s underlying business is strong. Investors who sell on a single short-term data point are no different from gambling in a casino.’” Via @ckcheung", "url": "https://x.com/GavinSBaker/status/2109971552380805219"}
 ];
 function renderX(){
   const ul=document.getElementById('xlist');
   ul.innerHTML = XPOSTS.map(p=>`<li><div class="who"><b>${esc(p.name)}</b><span>@${esc(p.user)} · ${esc(p.time)} · ${p.likes.toLocaleString()} likes</span></div><div class="txt"><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.text)}</a></div></li>`).join('');
-  document.getElementById('xquiet').textContent = 'Quiet in the last 24 hours: @karpathy posted nothing. @kevinrose only left a two-character reply. @bot only posted automated replies, so those are left out.';
+  document.getElementById('xquiet').textContent = "Quiet in the last 24 hours: @karpathy and @kevinrose posted nothing. @tickerplus only left an emoji reply. @bot only posted automated replies, so those are left out.";
 }
 renderX();
 </script>
